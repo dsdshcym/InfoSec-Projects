@@ -9,6 +9,14 @@ def selfReplacement(bits, replace_table):
         new_bits[i] = bits[pos]
     return new_bits
 
+def xor(list_A, list_B):
+    if len(list_A) != len(list_B):
+        raise BaseException
+    ans = []
+    for i in range(len(list_A)):
+        ans.append(list_A[i] ^ list_B[i])
+    return ans
+
 def generateKeys(key):
     # 密钥置换表，将64位密钥变成56位
     IPC = [56, 48, 40, 32, 24, 16, 8,
