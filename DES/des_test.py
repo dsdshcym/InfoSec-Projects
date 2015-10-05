@@ -37,5 +37,23 @@ class TestDESAlgorithm(unittest.TestCase):
         bits = [0, 1, 1, 1]
         self.assertEqual(des.bits_to_int(bits), 7)
 
+    def test_int_to_4bits(self):
+        x = 0
+        self.assertEqual(des.int_to_4bits(x), [0, 0, 0, 0])
+        x = 1
+        self.assertEqual(des.int_to_4bits(x), [0, 0, 0, 1])
+        x = 2
+        self.assertEqual(des.int_to_4bits(x), [0, 0, 1, 0])
+        x = 3
+        self.assertEqual(des.int_to_4bits(x), [0, 0, 1, 1])
+        x = 4
+        self.assertEqual(des.int_to_4bits(x), [0, 1, 0, 0])
+        x = 5
+        self.assertEqual(des.int_to_4bits(x), [0, 1, 0, 1])
+        x = 6
+        self.assertEqual(des.int_to_4bits(x), [0, 1, 1, 0])
+        x = 7
+        self.assertEqual(des.int_to_4bits(x), [0, 1, 1, 1])
+
 suite = unittest.TestLoader().loadTestsFromTestCase(TestDESAlgorithm)
 unittest.TextTestRunner(verbosity=2).run(suite)
