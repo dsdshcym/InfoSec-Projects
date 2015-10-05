@@ -19,5 +19,23 @@ class TestDESAlgorithm(unittest.TestCase):
         expected = [1, 0, 1, 1, 0, 0, 0, 1]
         self.assertEqual(des.xor(a, b), expected)
 
+    def test_bits_to_int(self):
+        bits = [0, 0, 0, 0]
+        self.assertEqual(des.bits_to_int(bits), 0)
+        bits = [0, 0, 0, 1]
+        self.assertEqual(des.bits_to_int(bits), 1)
+        bits = [0, 0, 1, 0]
+        self.assertEqual(des.bits_to_int(bits), 2)
+        bits = [0, 0, 1, 1]
+        self.assertEqual(des.bits_to_int(bits), 3)
+        bits = [0, 1, 0, 0]
+        self.assertEqual(des.bits_to_int(bits), 4)
+        bits = [0, 1, 0, 1]
+        self.assertEqual(des.bits_to_int(bits), 5)
+        bits = [0, 1, 1, 0]
+        self.assertEqual(des.bits_to_int(bits), 6)
+        bits = [0, 1, 1, 1]
+        self.assertEqual(des.bits_to_int(bits), 7)
+
 suite = unittest.TestLoader().loadTestsFromTestCase(TestDESAlgorithm)
 unittest.TextTestRunner(verbosity=2).run(suite)
