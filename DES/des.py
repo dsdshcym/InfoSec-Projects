@@ -17,6 +17,12 @@ def xor(list_A, list_B):
         ans.append(list_A[i] ^ list_B[i])
     return ans
 
+def bits_to_int(bits):
+    result = 0
+    for bit in bits:
+        result = (result << 1) | bit
+    return result
+
 def generateKeys(key):
     # 密钥置换表，将64位密钥变成56位
     IPC = [56, 48, 40, 32, 24, 16, 8,
