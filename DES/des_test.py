@@ -13,5 +13,11 @@ class TestDESAlgorithm(unittest.TestCase):
         table = [2, 4, 5, 7, 1, 3, 0, 6]
         self.assertEqual(des.selfReplacement(bits, table), [1, 1, 0, 0, 0, 1, 1, 1])
 
+    def test_xor(self):
+        a = [1, 1, 0, 1, 1, 0, 1, 1]
+        b = [0, 1, 1, 0, 1, 0, 1, 0]
+        expected = [1, 0, 1, 1, 0, 0, 0, 1]
+        self.assertEqual(des.xor(a, b), expected)
+
 suite = unittest.TestLoader().loadTestsFromTestCase(TestDESAlgorithm)
 unittest.TextTestRunner(verbosity=2).run(suite)
