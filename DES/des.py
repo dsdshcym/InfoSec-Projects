@@ -23,6 +23,14 @@ def bits_to_int(bits):
         result = (result << 1) | bit
     return result
 
+def int_to_4bits(x):
+    result = []
+    while x != 0:
+        result.append(x & 1)
+        x >>= 1
+    result += [0 for i in xrange(4 - len(result))]
+    return result[::-1]
+
 def generateKeys(key):
     # 密钥置换表，将64位密钥变成56位
     IPC = [56, 48, 40, 32, 24, 16, 8,
