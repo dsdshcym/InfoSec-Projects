@@ -4,9 +4,9 @@ def leftShift(bits, step):
     return bits[step:] + bits[:step]
 
 def selfReplacement(bits, replace_table):
-    new_bits = list(bits)
-    for i, pos in enumerate(replace_table):
-        new_bits[i] = bits[pos]
+    new_bits = []
+    for pos in replace_table:
+        new_bits.append(bits[pos])
     return new_bits
 
 def xor(list_A, list_B):
