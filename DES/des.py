@@ -197,54 +197,59 @@ def decrypt(bits, key):
     keys = generateKeys(key)[:encrypt_times][::-1]
     return xor(des(bits[:64], keys), IV)
 
-parser = argparse.ArgumentParser(
-    description = 'DES Encrypt or Decrypt at the command line')
-parser.add_argument(
-    '-d', '--decrypt', action = 'store_true', default = False)
-parser.add_argument(
-    'file', type = argparse.FileType('r'),
-    help = 'The file that needed encrypt or decrypt')
-parser.add_argument(
-    '-i', '--IV',
-    default =
-    '0111010001001111000001100100010010100011000001001010011001010100',
-    help = 'Change the default Init Vector')
-parser.add_argument(
-    '-r', '--encrypt_round', type = int, default = 6)
-parser.add_argument(
-    '-o', '--output', type = argparse.FileType('w'),
-    default = sys.stdout,
-    help = 'The file where the encrypt/decrypt results should be written')
-args = parser.parse_args()
-is_decrypt = args.decrypt
-encrypt_times = args.encrypt_round
+def main():
+    parser = argparse.ArgumentParser(
+        description = 'DES Encrypt or Decrypt at the command line')
+    parser.add_argument(
+        '-d', '--decrypt', action = 'store_true', default = False)
+    parser.add_argument(
+        'file', type = argparse.FileType('r'),
+        help = 'The file that needed encrypt or decrypt')
+    parser.add_argument(
+        '-i', '--IV',
+        default =
+        '0111010001001111000001100100010010100011000001001010011001010100',
+        help = 'Change the default Init Vector')
+    parser.add_argument(
+        '-r', '--encrypt_round', type = int, default = 6)
+    parser.add_argument(
+        '-o', '--output', type = argparse.FileType('w'),
+        default = sys.stdout,
+        help = 'The file where the encrypt/decrypt results should be written')
+    args = parser.parse_args()
+    is_decrypt = args.decrypt
+    global encrypt_times
+    encrypt_times = args.encrypt_round
 
-try:
-    bits = str.strip(args.file.readline())
-    if set(bits) != set(['0', '1']):
-        raise IOError("The input must be a binary")
-    if len(bits) != 64:
-        if is_decrypt and len(bits != 128):
-            raise IOError("The decrypt input must be a 64 or 128 bits binary")
-        raise IOError("The encrypt input must be a 64 bits binary")
-except IOError as e:
-    print e
-    exit()
+    try:
+        bits = str.strip(args.file.readline())
+        if set(bits) != set(['0', '1']):
+            raise IOError("The input must be a binary")
+        if len(bits) != 64:
+            if is_decrypt and len(bits != 128):
+                raise IOError("The decrypt input must be a 64 or 128 bits binary")
+            raise IOError("The encrypt input must be a 64 bits binary")
+    except IOError as e:
+        print e
+        exit()
 
-try:
-    key = getpass.getpass('Please Enter the Key: ')
-    if set(bits) != set(['0', '1']):
-        raise IOError("The key must be a binary")
-    if len(key) != 64:
-        raise IOError("The key must be a 64 bits binary")
-except IOError as e:
-    print e
-    exit()
+    try:
+        key = getpass.getpass('Please Enter the Key: ')
+        if set(bits) != set(['0', '1']):
+            raise IOError("The key must be a binary")
+        if len(key) != 64:
+            raise IOError("The key must be a 64 bits binary")
+    except IOError as e:
+        print e
+        exit()
 
-bits = map(int, list(bits))
-key = map(int, list(key))
+    bits = map(int, list(bits))
+    key = map(int, list(key))
 
-if is_decrypt:
-    args.output.write(''.join(str(x) for x in decrypt(bits, key)) + '\n')
-else:
-    args.output.write(''.join(str(x) for x in encrypt(bits, key)[:64]) + '\n')
+    if is_decrypt:
+        args.output.write(''.join(str(x) for x in decrypt(bits, key)) + '\n')
+    else:
+        args.output.write(''.join(str(x) for x in encrypt(bits, key)[:64]) + '\n')
+
+if __name__ == '__main__':
+    main()
