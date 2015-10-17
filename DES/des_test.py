@@ -2,6 +2,17 @@ import des
 import unittest
 
 class TestDESAlgorithm(unittest.TestCase):
+    def setUp(self):
+        des.encrypt_times = 16
+        # p = 'testntic'
+        p = '0110001101101001011101000110111001110100011100110110010101110100'
+        # k = '12345678'
+        k = '0011100000110111001101100011010100110100001100110011001000110001'
+        c = '0101000011010111110100111001110111001010000011100001110000111110'
+        self.plain  = map(int, list(p))
+        self.key    = map(int, list(k))
+        self.cipher = map(int, list(c))
+
     def test_leftShift(self):
         bits = [1, 1, 0, 0, 1, 0, 1]
         self.assertEqual(des.leftShift(bits, 2), [0, 0, 1, 0, 1, 1, 1])
@@ -54,6 +65,12 @@ class TestDESAlgorithm(unittest.TestCase):
         self.assertEqual(des.int_to_4bits(x), [0, 1, 1, 0])
         x = 7
         self.assertEqual(des.int_to_4bits(x), [0, 1, 1, 1])
+
+    def test_encrypt(self):
+        self.assertEqual(des.encrypt(self.plain, self.key), self.cipher)
+
+    def test_decrypt(self):
+        self.assertEqual(des.decrypt(self.cipher, self.key), self.plain)
 
 suite = unittest.TestLoader().loadTestsFromTestCase(TestDESAlgorithm)
 unittest.TextTestRunner(verbosity=2).run(suite)
