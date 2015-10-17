@@ -2,6 +2,7 @@
 from random import randint
 import argparse
 import sys
+import getpass
 
 PADDING_LEN = 56
 PADDING_LEN_BITS = [0, 0, 1, 1, 1, 0, 0, 0]
@@ -228,3 +229,5 @@ try:
 except IOError as e:
     print e
     exit()
+
+key = getpass.getpass('Please Enter the Key: ')
