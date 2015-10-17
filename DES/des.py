@@ -241,3 +241,10 @@ except IOError as e:
     print e
     exit()
 
+bits = map(int, list(bits))
+key = map(int, list(key))
+
+if is_decrypt:
+    args.output.write(''.join(str(x) for x in decrypt(bits, key)) + '\n')
+else:
+    args.output.write(''.join(str(x) for x in encrypt(bits, key)[:64]) + '\n')
