@@ -1,5 +1,10 @@
 # -*- coding: utf-8 -*-
 
+padding_length = 56
+
+IV = [int(x) for x in \
+      '0111010001001111000001100100010010100011000001001010011001010100']
+
 def leftShift(bits, step):
     return bits[step:] + bits[:step]
 
@@ -178,8 +183,9 @@ def des(bits, keys):
 
 def encrypt(bits, key):
     keys = generateKeys(key)
-    return des(bits, keys)
+    pre_bits = IV
+    return des(xor(pre_bits, bits), keys)
 
 def decrypt(bits, key):
     keys = generateKeys(key)[:encrypt_times][::-1]
-    return des(bits, keys)
+    return xor(des(bits, keys), IV)
