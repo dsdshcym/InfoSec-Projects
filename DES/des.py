@@ -210,4 +210,15 @@ parser.add_argument(
 parser.add_argument(
     '-t', '--encryption-times', type = int)
 args = parser.parse_args()
+decrypt = args.decrypt
 
+try:
+    bits = str.strip(args.file.readline())
+    if set(bits) != set(['0', '1']):
+        raise IOError("The input must be a binary")
+    if len(bits) != 64:
+        if decrypt and len(bits != 128):
+            raise IOError("The decrypt input must be a 64 or 128 bits binary")
+        raise IOError("The encrypt input must be a 64 bits binary")
+except IOError as e:
+    print e
