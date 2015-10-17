@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from random import randint
 import argparse
+import sys
 
 PADDING_LEN = 56
 PADDING_LEN_BITS = [0, 0, 1, 1, 1, 0, 0, 0]
@@ -209,6 +210,10 @@ parser.add_argument(
     help = 'Change the default Init Vector')
 parser.add_argument(
     '-t', '--encryption-times', type = int)
+parser.add_argument(
+    '-o', '--output', type = argparse.FileType('w'),
+    default = sys.stdout,
+    help = 'The file where the encrypt/decrypt results should be written')
 args = parser.parse_args()
 decrypt = args.decrypt
 
