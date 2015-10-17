@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from random import randint
+import argparse
 
 PADDING_LEN = 56
 PADDING_LEN_BITS = [0, 0, 1, 1, 1, 0, 0, 0]
@@ -193,3 +194,20 @@ def encrypt(bits, key):
 def decrypt(bits, key):
     keys = generateKeys(key)[:encrypt_times][::-1]
     return xor(des(bits[:64], keys), IV)
+
+parser = argparse.ArgumentParser(
+    description = 'DES Encrypt or Decrypt at the command line')
+parser.add_argument(
+    '-d', '--decrypt', action = 'store_true', default = False)
+parser.add_argument(
+    'file', type = argparse.FileType('r'),
+    help = 'The file that needed encrypt or decrypt')
+parser.add_argument(
+    '-i', '--IV',
+    default =
+    '0111010001001111000001100100010010100011000001001010011001010100',
+    help = 'Change the default Init Vector')
+parser.add_argument(
+    '-t', '--encryption-times', type = int)
+args = parser.parse_args()
+
