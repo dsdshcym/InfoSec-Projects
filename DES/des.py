@@ -216,7 +216,7 @@ parser.add_argument(
     default = sys.stdout,
     help = 'The file where the encrypt/decrypt results should be written')
 args = parser.parse_args()
-decrypt = args.decrypt
+is_decrypt = args.decrypt
 encrypt_times = args.encrypt_round
 
 try:
@@ -224,7 +224,7 @@ try:
     if set(bits) != set(['0', '1']):
         raise IOError("The input must be a binary")
     if len(bits) != 64:
-        if decrypt and len(bits != 128):
+        if is_decrypt and len(bits != 128):
             raise IOError("The decrypt input must be a 64 or 128 bits binary")
         raise IOError("The encrypt input must be a 64 bits binary")
 except IOError as e:
