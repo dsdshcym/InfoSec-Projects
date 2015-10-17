@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
+from random import randint
 
-padding_length = 56
+PADDING_LEN = 56
+PADDING_LEN_BITS = [0, 0, 1, 1, 1, 0, 0, 0]
 
 IV = [int(x) for x in \
       '0111010001001111000001100100010010100011000001001010011001010100']
@@ -184,8 +186,10 @@ def des(bits, keys):
 def encrypt(bits, key):
     keys = generateKeys(key)
     pre_bits = IV
-    return des(xor(pre_bits, bits), keys)
+    cipher = des(xor(pre_bits, bits), keys)
+    padding_bits = [randint(0, 1) for _ in xrange(PADDING_LEN)] + PADDING_LEN_BITS
+    return cipher + des(xor(cipher, padding_bits), keys)
 
 def decrypt(bits, key):
     keys = generateKeys(key)[:encrypt_times][::-1]
-    return xor(des(bits, keys), IV)
+    return xor(des(bits[:64], keys), IV)
