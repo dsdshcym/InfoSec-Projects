@@ -4,9 +4,9 @@ import unittest
 class TestDESAlgorithm(unittest.TestCase):
     def setUp(self):
         des.encrypt_times = 16
-        # p = 'testntic'
+        # p = 'citntset'
         p = '0110001101101001011101000110111001110100011100110110010101110100'
-        # k = '12345678'
+        # k = '87654321'
         k = '0011100000110111001101100011010100110100001100110011001000110001'
         c = '1100101110111110011000000001000001100000100110011001101000100110'
         self.plain  = map(int, list(p))
