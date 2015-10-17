@@ -235,7 +235,7 @@ def main():
 
     try:
         key = getpass.getpass('Please Enter the Key: ')
-        if set(bits) != set(['0', '1']):
+        if set(key) != set(['0', '1']):
             raise IOError("The key must be a binary")
         if len(key) != 64:
             raise IOError("The key must be a 64 bits binary")
