@@ -210,13 +210,14 @@ parser.add_argument(
     '0111010001001111000001100100010010100011000001001010011001010100',
     help = 'Change the default Init Vector')
 parser.add_argument(
-    '-t', '--encryption-times', type = int)
+    '-r', '--encrypt_round', type = int, default = 6)
 parser.add_argument(
     '-o', '--output', type = argparse.FileType('w'),
     default = sys.stdout,
     help = 'The file where the encrypt/decrypt results should be written')
 args = parser.parse_args()
 decrypt = args.decrypt
+encrypt_times = args.encrypt_round
 
 try:
     bits = str.strip(args.file.readline())
