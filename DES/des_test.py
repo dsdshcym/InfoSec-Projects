@@ -67,7 +67,8 @@ class TestDESAlgorithm(unittest.TestCase):
         self.assertEqual(des.int_to_4bits(x), [0, 1, 1, 1])
 
     def test_encrypt(self):
-        self.assertEqual(des.encrypt(self.plain, self.key), self.cipher)
+        des_cipher = des.encrypt(self.plain, self.key)
+        self.assertEqual(des_cipher[:64], self.cipher)
 
     def test_decrypt(self):
         self.assertEqual(des.decrypt(self.cipher, self.key), self.plain)
