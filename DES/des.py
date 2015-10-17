@@ -227,3 +227,4 @@ try:
         raise IOError("The encrypt input must be a 64 bits binary")
 except IOError as e:
     print e
+    exit()
