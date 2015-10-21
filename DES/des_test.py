@@ -89,11 +89,12 @@ class TestDESAlgorithm(unittest.TestCase):
         self.assertEqual(des.len_to_8bits(x), [0, 0, 0, 0, 0, 1, 1, 1])
 
     def test_encrypt(self):
-        des_cipher = des.encrypt(self.plain, self.key)
+        des_cipher = des.encrypt(self.plain)
         self.assertEqual(des_cipher[:64], self.cipher)
+        self.assertEqual(len(des_cipher), 128)
 
     def test_decrypt(self):
-        self.assertEqual(des.decrypt(self.cipher, self.key), self.plain)
+        self.assertEqual(des.decrypt(self.cipher)[:64], self.plain)
 
 suite = unittest.TestLoader().loadTestsFromTestCase(TestDESAlgorithm)
 unittest.TextTestRunner(verbosity=2).run(suite)
