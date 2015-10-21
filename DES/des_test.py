@@ -4,6 +4,8 @@ import unittest
 class TestDESAlgorithm(unittest.TestCase):
     def setUp(self):
         des.encrypt_times = 16
+        des.IV = [int(x) for x in \
+                  '0111010001001111000001100100010010100011000001001010011001010100']
         # p = 'citntset'
         p = '0110001101101001011101000110111001110100011100110110010101110100'
         # k = '87654321'
