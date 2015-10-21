@@ -243,6 +243,7 @@ def main():
 
     bits = map(int, list(bits))
     key = map(int, list(key))
+    IV = map(int, list(IV))
 
     global keys
     keys = generateKeys(key)
