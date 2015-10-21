@@ -7,13 +7,13 @@ class TestDESAlgorithm(unittest.TestCase):
         des.IV = [int(x) for x in \
                   '0111010001001111000001100100010010100011000001001010011001010100']
         # p = 'citntset'
-        p = '0110001101101001011101000110111001110100011100110110010101110100'
+        self.p = '0110001101101001011101000110111001110100011100110110010101110100'
         # k = '87654321'
-        k = '0011100000110111001101100011010100110100001100110011001000110001'
-        c = '1100101110111110011000000001000001100000100110011001101000100110'
-        self.plain  = map(int, list(p))
-        self.key    = map(int, list(k))
-        self.cipher = map(int, list(c))
+        self.k = '0011100000110111001101100011010100110100001100110011001000110001'
+        self.c = '1100101110111110011000000001000001100000100110011001101000100110'
+        self.plain  = map(int, list(self.p))
+        self.key    = map(int, list(self.k))
+        self.cipher = map(int, list(self.c))
 
         des.keys = des.generateKeys(self.key)
 
@@ -87,6 +87,11 @@ class TestDESAlgorithm(unittest.TestCase):
         self.assertEqual(des.int_to_bits(x, 8), [0, 0, 0, 0, 0, 1, 1, 0])
         x = 7
         self.assertEqual(des.int_to_bits(x, 8), [0, 0, 0, 0, 0, 1, 1, 1])
+
+    def test_bits_to_str(self):
+        self.assertEqual(des.bits_to_str(self.plain), self.p)
+        self.assertEqual(des.bits_to_str(self.key), self.k)
+        self.assertEqual(des.bits_to_str(self.cipher), self.c)
 
     def test_encrypt(self):
         des_cipher = des.encrypt(self.plain)
