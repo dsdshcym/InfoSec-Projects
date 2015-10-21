@@ -273,6 +273,7 @@ def main():
     if is_decrypt:
         args.output.write(bits_to_str(decrypt(bits)) + '\n')
     else:
+        args.output.write(bits_to_str(des(IV, keys)) + '\n')
         args.output.write(bits_to_str(encrypt(bits)) + '\n')
 
 if __name__ == '__main__':
