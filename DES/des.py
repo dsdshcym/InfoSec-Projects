@@ -22,10 +22,7 @@ def xor(list_A, list_B):
     return ans
 
 def bits_to_int(bits):
-    result = 0
-    for bit in bits:
-        result = (result << 1) | bit
-    return result
+    return int(bits_to_str(bits), 2)
 
 def int_to_bits(x, n):
     b = map(int, list(bin(x)[2:]))
