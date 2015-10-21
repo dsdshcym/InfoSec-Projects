@@ -229,9 +229,10 @@ def main():
         help = 'The file that needed encrypt or decrypt')
     parser.add_argument(
         '-i', '--IV',
-        default =
-        '0111010001001111000001100100010010100011000001001010011001010100',
-        help = 'Change the default Init Vector')
+        default = False,
+        action = 'store_true',
+        help = 'Whether to read the Init Vector from the input file.\
+        The default IV is 0111010001001111000001100100010010100011000001001010011001010100.')
     parser.add_argument(
         '-r', '--encrypt_round', type = int, default = 6)
     parser.add_argument(
@@ -247,7 +248,13 @@ def main():
         perror("Encrypt Times must be in range 0 to 16 (included)")
 
     global IV
-    IV = args.IV
+
+    change_IV = args.IV
+    if change_IV:
+        IV = str.strip(args.file.readline())
+    else:
+        IV = '0111010001001111000001100100010010100011000001001010011001010100'
+
     if set(IV) != set(['0', '1']):
         perror("IV must be a binary")
     if len(IV) != 64:
@@ -271,6 +278,7 @@ def main():
     keys = generateKeys(key)
 
     if is_decrypt:
+        IV = des(IV, keys[:encrypt_times][::-1])
         args.output.write(bits_to_str(decrypt(bits)) + '\n')
     else:
         args.output.write(bits_to_str(des(IV, keys)) + '\n')
