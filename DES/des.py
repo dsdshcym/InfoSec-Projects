@@ -211,8 +211,15 @@ def encrypt(bits):
 
     return cipher
 
-def decrypt(bits, key):
-    return xor(des(bits[:64], keys[:encrypt_times][::-1]), IV)
+def decrypt(bits):
+    pre_bits = IV
+    plain = []
+    while bits:
+        now = bits[:64]
+        bits = bits[64:]
+        plain += xor(des(now, keys[:encrypt_times][::-1]), pre_bits)
+        pre_bits = now
+    return plain
 
 def perror(error):
     print >> sys.stderr, error
@@ -270,7 +277,7 @@ def main():
     keys = generateKeys(key)
 
     if is_decrypt:
-        args.output.write(''.join(str(x) for x in decrypt(bits, key)) + '\n')
+        args.output.write(''.join(str(x) for x in decrypt(bits)) + '\n')
     else:
         args.output.write(''.join(str(x) for x in encrypt(bits)) + '\n')
 
