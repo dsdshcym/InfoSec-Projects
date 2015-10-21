@@ -222,8 +222,11 @@ def main():
         help = 'The file where the encrypt/decrypt results should be written')
     args = parser.parse_args()
     is_decrypt = args.decrypt
+
     global encrypt_times
     encrypt_times = args.encrypt_round
+    if encrypt_times < 0 or encrypt_times > 16:
+        perror("Encrypt Times must be in range 0 to 16 (included)")
 
     bits = str.strip(args.file.readline())
     if set(bits) != set(['0', '1']):
