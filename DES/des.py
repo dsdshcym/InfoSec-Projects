@@ -7,9 +7,6 @@ import getpass
 PADDING_LEN = 56
 PADDING_LEN_BITS = [0, 0, 1, 1, 1, 0, 0, 0]
 
-IV = [int(x) for x in \
-      '0111010001001111000001100100010010100011000001001010011001010100']
-
 def leftShift(bits, step):
     return bits[step:] + bits[:step]
 
@@ -227,6 +224,13 @@ def main():
     encrypt_times = args.encrypt_round
     if encrypt_times < 0 or encrypt_times > 16:
         perror("Encrypt Times must be in range 0 to 16 (included)")
+
+    global IV
+    IV = args.IV
+    if set(IV) != set(['0', '1']):
+        perror("IV must be a binary")
+    if len(IV) != 64:
+        perror("IV must be a 64 bits binary")
 
     bits = str.strip(args.file.readline())
     if set(bits) != set(['0', '1']):
