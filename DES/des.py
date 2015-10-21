@@ -4,9 +4,6 @@ import argparse
 import sys
 import getpass
 
-PADDING_LEN = 56
-PADDING_LEN_BITS = [0, 0, 1, 1, 1, 0, 0, 0]
-
 def leftShift(bits, step):
     return bits[step:] + bits[:step]
 
@@ -187,12 +184,32 @@ def des(bits, keys):
         left = temp
     return selfReplacement(right + left, IP_1)
 
-def encrypt(bits, key):
-    keys = generateKeys(key)
+def encrypt(bits):
     pre_bits = IV
-    cipher = des(xor(pre_bits, bits), keys)
-    padding_bits = [randint(0, 1) for _ in xrange(PADDING_LEN)] + PADDING_LEN_BITS
-    return cipher + des(xor(cipher, padding_bits), keys)
+    cipher = []
+    final = False
+    while bits:
+        now = bits[:64]
+        bits = bits[64:]
+        N = len(now)
+        if N <= 56:
+            padding_len = 56 - N
+            padding_len_bits = len_to_8bits(padding_len)
+            now += [randint(0, 1) for _ in xrange(padding_len)] + padding_len_bits
+        if 56 < N <= 64 and bits == []:
+            padding_len = 56 + 64 - N
+            padding_len_bits = len_to_8bits(padding_len)
+            now += [randint(0, 1) for _ in xrange(64 - N)]
+            bits = [randint(0, 1) for _ in xrange(56)] + padding_len_bits
+            final = True
+        pre_bits = des(xor(pre_bits, now), keys)
+        cipher += pre_bits
+        if final:
+            pre_bits = des(xor(pre_bits, bits), keys)
+            cipher += pre_bits
+            break
+
+    return cipher
 
 def decrypt(bits, key):
     return xor(des(bits[:64], keys[:encrypt_times][::-1]), IV)
@@ -255,7 +272,7 @@ def main():
     if is_decrypt:
         args.output.write(''.join(str(x) for x in decrypt(bits, key)) + '\n')
     else:
-        args.output.write(''.join(str(x) for x in encrypt(bits, key)[:64]) + '\n')
+        args.output.write(''.join(str(x) for x in encrypt(bits)) + '\n')
 
 if __name__ == '__main__':
     main()
