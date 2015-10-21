@@ -15,6 +15,8 @@ class TestDESAlgorithm(unittest.TestCase):
         self.key    = map(int, list(k))
         self.cipher = map(int, list(c))
 
+        des.keys = des.generateKeys(self.key)
+
     def test_leftShift(self):
         bits = [1, 1, 0, 0, 1, 0, 1]
         self.assertEqual(des.leftShift(bits, 2), [0, 0, 1, 0, 1, 1, 1])

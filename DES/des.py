@@ -191,8 +191,7 @@ def encrypt(bits, key):
     return cipher + des(xor(cipher, padding_bits), keys)
 
 def decrypt(bits, key):
-    keys = generateKeys(key)[:encrypt_times][::-1]
-    return xor(des(bits[:64], keys), IV)
+    return xor(des(bits[:64], keys[:encrypt_times][::-1]), IV)
 
 def perror(error):
     print >> sys.stderr, error
@@ -235,10 +234,6 @@ def main():
     bits = str.strip(args.file.readline())
     if set(bits) != set(['0', '1']):
         perror("The input must be a binary")
-    if len(bits) != 64:
-        if is_decrypt and len(bits != 128):
-            perror("The decrypt input must be a 64 or 128 bits binary")
-        perror("The encrypt input must be a 64 bits binary")
 
     key = getpass.getpass('Please Enter the Key: ')
     if set(key) != set(['0', '1']):
@@ -248,6 +243,9 @@ def main():
 
     bits = map(int, list(bits))
     key = map(int, list(key))
+
+    global keys
+    keys = generateKeys(key)
 
     if is_decrypt:
         args.output.write(''.join(str(x) for x in decrypt(bits, key)) + '\n')
