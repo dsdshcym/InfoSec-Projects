@@ -27,17 +27,11 @@ def bits_to_int(bits):
         result = (result << 1) | bit
     return result
 
-def int_to_4bits(x):
-    result = []
-    while x != 0:
-        result.append(x & 1)
-        x >>= 1
-    result += [0 for i in xrange(4 - len(result))]
-    return result[::-1]
-
-def len_to_8bits(x):
+def int_to_bits(x, n):
     b = map(int, list(bin(x)[2:]))
-    return [0 for _ in xrange(8 - len(b))] + b
+    if len(b) > n:
+        raise ValueError
+    return [0 for _ in xrange(n - len(b))] + b
 
 def generateKeys(key):
     # 密钥置换表，将64位密钥变成56位
@@ -153,7 +147,7 @@ def Feistel(bits, key):
         bits_i = bits[6 * i : 6 * (i + 1)]
         x = bits_to_int([bits_i[0], bits_i[5]])
         y = bits_to_int(bits_i[1:5])
-        result += int_to_4bits(S_BOX[i][x][y])
+        result += int_to_bits(S_BOX[i][x][y], 4)
     return selfReplacement(result, P)
 
 def des(bits, keys):
@@ -194,11 +188,11 @@ def encrypt(bits):
         N = len(now)
         if N <= 56:
             padding_len = 56 - N
-            padding_len_bits = len_to_8bits(padding_len)
+            padding_len_bits = int_to_bits(padding_len, 8)
             now += [randint(0, 1) for _ in xrange(padding_len)] + padding_len_bits
         if 56 < N <= 64 and bits == []:
             padding_len = 56 + 64 - N
-            padding_len_bits = len_to_8bits(padding_len)
+            padding_len_bits = int_to_bits(padding_len, 8)
             now += [randint(0, 1) for _ in xrange(64 - N)]
             bits = [randint(0, 1) for _ in xrange(56)] + padding_len_bits
             final = True
