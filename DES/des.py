@@ -33,6 +33,9 @@ def int_to_bits(x, n):
         raise ValueError
     return [0 for _ in xrange(n - len(b))] + b
 
+def bits_to_str(bits):
+    return ''.join(map(str, bits))
+
 def generateKeys(key):
     # 密钥置换表，将64位密钥变成56位
     IPC = [56, 48, 40, 32, 24, 16, 8,
@@ -271,9 +274,9 @@ def main():
     keys = generateKeys(key)
 
     if is_decrypt:
-        args.output.write(''.join(str(x) for x in decrypt(bits)) + '\n')
+        args.output.write(bits_to_str(decrypt(bits)) + '\n')
     else:
-        args.output.write(''.join(str(x) for x in encrypt(bits)) + '\n')
+        args.output.write(bits_to_str(encrypt(bits)) + '\n')
 
 if __name__ == '__main__':
     main()
