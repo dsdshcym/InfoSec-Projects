@@ -38,6 +38,10 @@ def int_to_4bits(x):
     result += [0 for i in xrange(4 - len(result))]
     return result[::-1]
 
+def len_to_8bits(x):
+    b = map(int, list(bin(x)[2:]))
+    return [0 for _ in xrange(8 - len(b))] + b
+
 def generateKeys(key):
     # 密钥置换表，将64位密钥变成56位
     IPC = [56, 48, 40, 32, 24, 16, 8,
