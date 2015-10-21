@@ -197,6 +197,10 @@ def decrypt(bits, key):
     keys = generateKeys(key)[:encrypt_times][::-1]
     return xor(des(bits[:64], keys), IV)
 
+def perror(error):
+    print >> sys.stderr, error
+    exit()
+
 def main():
     parser = argparse.ArgumentParser(
         description = 'DES Encrypt or Decrypt at the command line')
@@ -221,27 +225,19 @@ def main():
     global encrypt_times
     encrypt_times = args.encrypt_round
 
-    try:
-        bits = str.strip(args.file.readline())
-        if set(bits) != set(['0', '1']):
-            raise IOError("The input must be a binary")
-        if len(bits) != 64:
-            if is_decrypt and len(bits != 128):
-                raise IOError("The decrypt input must be a 64 or 128 bits binary")
-            raise IOError("The encrypt input must be a 64 bits binary")
-    except IOError as e:
-        print e
-        exit()
+    bits = str.strip(args.file.readline())
+    if set(bits) != set(['0', '1']):
+        perror("The input must be a binary")
+    if len(bits) != 64:
+        if is_decrypt and len(bits != 128):
+            perror("The decrypt input must be a 64 or 128 bits binary")
+        perror("The encrypt input must be a 64 bits binary")
 
-    try:
-        key = getpass.getpass('Please Enter the Key: ')
-        if set(key) != set(['0', '1']):
-            raise IOError("The key must be a binary")
-        if len(key) != 64:
-            raise IOError("The key must be a 64 bits binary")
-    except IOError as e:
-        print e
-        exit()
+    key = getpass.getpass('Please Enter the Key: ')
+    if set(key) != set(['0', '1']):
+        perror("The key must be a binary")
+    if len(key) != 64:
+        perror("The key must be a 64 bits binary")
 
     bits = map(int, list(bits))
     key = map(int, list(key))
