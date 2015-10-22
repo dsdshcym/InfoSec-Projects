@@ -1,0 +1,201 @@
+#+TITLE: 6 轮 DES 的编程实现
+
+* 需求分析
+** 输入输出
+- 运行模式
+
+  可选择加密模式或解密模式
+
+- 输入文件
+  - 密钥 ::
+       让用户输入密钥，而非从文件中读取
+  - 加密 ::
+       包括 IV 和待加密的二进制字符串
+  - 解密 ::
+       包括加密后的 IV 和待解密的二进制字符串
+- 输出文件
+  - 加密 ::
+       包括 ECB 加密后的 IV 和 CBC 加密后的二进制串
+  - 解密 ::
+       包括 ECB 解密后的 IV 和 CBC 解密后的二进制串
+** 加密细节
+1. 利用给定的密钥生成 6 组密钥
+2. 对 IV 进行 ECB 加密
+3. 以 IV 为初始向量对原码进行 CBC 迭代加密
+4. 在原串长度末尾加上随机生成的 0, 1 串和该 0, 1 串的长度（ 8 位），使其长度为
+   64 的整数倍
+5. 输出加密后的 IV 和密码
+** 解密细节
+1. 利用给定的密钥生成 6 组密钥
+2. 对 IV 进行 ECB 解密
+3. 用解密后的 IV 作为初始向量对密码进行 CBC 迭代解密
+4. 输出解密后的 IV 和原码
+* 实现环境
+- 编程语言 :: Python 2.7.10
+- 测试系统 :: OS X 10.11
+- 项目主页 ::
+     [[https://github.com/dsdshcym/InfoSec-Projects/tree/des/DES]]
+* 源码说明
+** 概述
+- 本次实验使用 Python 完成，包括两个文件 ~des.py~ 和 ~des_test.py~
+  - ~des.py~
+
+    主要运行文件，可通过 Python 调用完成对文件的加密、解密操作
+
+  - ~des_test.py~
+
+    测试文件，包括了对 ~des.py~ 的单元测试和集成测试，共 9 项，全部通过
+** 使用说明
+- 加密轮数
+
+  可通过 ~-r ENCRYPT_ROUND~ 来设置，默认值为 6
+
+- 输出文件
+
+  可通过 ~-o OUTPUT~ 来设置，默认为 ~stdout~
+
+- 加密/解密
+
+  可通过 ~-d~ 参数来设置是否为解密模式，默认为加密模式
+
+- IV
+
+  可通过 ~-i~ 参数来设置是否从读入文件中读取 IV ，若不设置则使用默认向量
+
+- 更多
+
+  #+BEGIN_SRC sh :results output :exports both
+    python des.py -h
+  #+END_SRC
+
+  #+RESULTS:
+  #+begin_example
+  usage: des.py [-h] [-d] [-i] [-r ENCRYPT_ROUND] [-o OUTPUT] file
+
+  DES Encrypt or Decrypt at the command line
+
+  positional arguments:
+    file                  The file that needed encrypt or decrypt
+
+  optional arguments:
+    -h, --help            show this help message and exit
+    -d, --decrypt
+    -i, --IV              Whether to read the Init Vector from the input file.
+                          The default IV is 011101000100111100000110010001001010
+                          0011000001001010011001010100.
+    -r ENCRYPT_ROUND, --encrypt_round ENCRYPT_ROUND
+    -o OUTPUT, --output OUTPUT
+                          The file where the encrypt/decrypt results should be
+                          written
+  #+end_example
+** 程序说明
+只对 ~des.py~ 中的函数进行说明，对 ~des_test.py~ 中的函数省略
+- 用到的函数库
+  - ~random~ ::
+       产生随机的 0, 1 填充串
+  - ~argparse~ ::
+       解析输入的 arguments
+  - ~sys~ ::
+       提供系统标准输出 (~sys.stdout~) 和系统错误输出 (~sys.stderr~)
+  - ~getpass~ ::
+       提供输入密钥的方法
+- 变量格式
+  - 读入
+
+    读入时均为 ~String~
+
+  - 运行
+
+    运行时将二进制串转为只包含 0, 1 的 ~List~ ，模拟 ~bitstring~ 的操作。方便后
+    期用第三方 ~bitstring~ 库替代。
+
+  - 输出
+
+    输出时转为 ~String~ 输出
+- 主要函数
+  - ~main~ ::
+       Python 调用时的主程序，负责 arguments 的初始化、读入、验证，调用加密、解
+       密函数等操作
+  - ~encrypt~ ::
+       提供加密操作，并负责填充随机 0, 1 串
+  - ~decrypt~ ::
+       提供解密操作
+- 辅助函数
+  - ~generateKeys~ ::
+       根据提供的密钥生成足够多的子密钥
+  - ~des~ ::
+       因为加密、解密操作只有用到的密钥顺序相反，其他操作相同，所以用同一个
+       ~des~ 函数提供加解密功能，传入不同的密钥即可
+  - ~Feistel~ ::
+       轮函数 F
+  - ~selfReplacement~ ::
+       置换函数
+  - ~leftShift~ ::
+       左移函数
+  - ~xor~ ::
+       异或函数
+  - ~bits_to_int~ ::
+       将 0, 1 ~List~ 转为整数
+  - ~bits_to_str~ ::
+       将 0, 1 ~List~ 转为字符串
+  - ~int_to_bits~ ::
+       将整数转为 n 位 0, 1 ~List~ ，若 n 大于整数的二进制表示长度，则在之前补 0
+       ，若小于则报错
+* Demo
+** 加密
+- 输入
+  - IV ::
+       0111010001001111000001100100010010100011000001001010011001010101
+  - 原码 ::
+       0110001101101001011101000110111001110100011100110110010101110100
+  - 密钥 ::
+       0011100000110111001101100011010100110100001100110011001000110001
+- 运行结果
+  #+BEGIN_SRC sh :exports both
+    cat plain.txt
+    python des.py -i plain.txt
+  #+END_SRC
+
+  #+RESULTS:
+  #+BEGIN_EXAMPLE
+    0111010001001111000001100100010010100011000001001010011001010101 // IV
+    0110001101101001011101000110111001110100011100110110010101110100 // 原码
+    Please Enter the Key:                                            //（输入密钥后）
+    1010011100110011111101010111000011000100100110101001011110110100
+    10001100110000000111011010001101001011010101100011011111011111011011110011110100111101011010111000011010101110101110011111010111
+  #+END_EXAMPLE
+** 解密
+- 输入
+  - 加密后的 IV ::
+       1010011100110011111101010111000011000100100110101001011110110100
+  - 密文 ::
+       10001100110000000111011010001101001011010101100011011111011111011011110011110100111101011010111000011010101110101110011111010111
+  - 密钥 ::
+       同上
+- 运行结果
+  #+BEGIN_SRC sh :exports both
+    cat cipher.txt
+    python des.py -i -d cipher.txt
+  #+END_SRC
+
+  #+RESULTS:
+  #+BEGIN_EXAMPLE
+    1010011100110011111101010111000011000100100110101001011110110100                                                                 // 加密后的 IV // IV
+    10001100110000000111011010001101001011010101100011011111011111011000110101011101101111101100000100000111110101100111100011011101 // 密码
+    Please Enter the Key:                                                                                                            // （输入密钥后）
+    01100011011010010111010001101110011101000111001101100101011101000111011110110110010001001111010001100111101010001110110100111000
+  #+END_EXAMPLE
+* Bonus
+** 开发过程
+整个开发用时 11 小时。程序功能变化如下：
+1. 刚开始为 64 位输入， ECB 模式加密， 64 位输出，不含 IV
+2. 之后改为 64 位输入， CBC 模式加密，补位后输出， IV 不加密
+3. 最终改为任意位输入， CBC 模式加密，补位后输出， IV 经 ECB 模式加密
+
+上述功能均在 Github 上打了标签，链接如下：
+1. https://github.com/dsdshcym/InfoSec-Projects/tree/DES_ECB_Mode/DES
+2. [[https://github.com/dsdshcym/InfoSec-Projects/tree/DES_64_CBC_Mode/DES]]
+3. [[https://github.com/dsdshcym/InfoSec-Projects/tree/DES_Full_CBC_Mode/DES]]
+** Test
+~des_test.py~ 中包括了对辅助函数的单元测试，还有对 ~encrypt~ 和 ~decrypt~ 的测试。
+这些测试在我将程序功能不断改进的过程中提供了重要的帮助，减少了我调试的难度。
