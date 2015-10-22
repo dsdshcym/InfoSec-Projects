@@ -5,15 +5,25 @@ import sys
 import getpass
 
 def leftShift(bits, step):
+    """
+    Left Shift a 0, 1 list
+    """
     return bits[step:] + bits[:step]
 
 def selfReplacement(bits, replace_table):
+    """
+
+    """
     new_bits = []
     for pos in replace_table:
         new_bits.append(bits[pos])
     return new_bits
 
 def xor(list_A, list_B):
+    """
+    An xor operation for two 0, 1 lists
+    Raises BaseException if two lists have different length
+    """
     if len(list_A) != len(list_B):
         raise BaseException
     ans = []
@@ -22,18 +32,32 @@ def xor(list_A, list_B):
     return ans
 
 def bits_to_int(bits):
+    """
+    Transform a 0, 1 list to a integer
+    """
     return int(bits_to_str(bits), 2)
 
 def int_to_bits(x, n):
+    """
+    Transform a integer to a n-length 0, 1 list
+    Pads 0 if n > len(bin(x))
+    Raises ValueError if n < len(bin(x))
+    """
     b = map(int, list(bin(x)[2:]))
     if len(b) > n:
         raise ValueError
     return [0 for _ in xrange(n - len(b))] + b
 
 def bits_to_str(bits):
+    """
+    Transform a 0, 1 list to a string
+    """
     return ''.join(map(str, bits))
 
 def generateKeys(key):
+    """
+    Generates `encrypt_times` rounds of keys based on key
+    """
     # 密钥置换表，将64位密钥变成56位
     IPC = [56, 48, 40, 32, 24, 16, 8,
            0,  57, 49, 41, 33, 25, 17,
@@ -68,6 +92,11 @@ def generateKeys(key):
     return keys
 
 def Feistel(bits, key):
+    """
+    Feistel function
+    :input bits: a 32-bits long 0, 1 list, key: a 48-bits long 0, 1 list
+    :output a 32-bits long 0, 1 list
+    """
     # 扩展置换表，将 32位 扩展至 48位
     E = [31, 0,  1,  2,  3,  4,
          3,  4,  5,  6,  7,  8,
@@ -151,6 +180,11 @@ def Feistel(bits, key):
     return selfReplacement(result, P)
 
 def des(bits, keys):
+    """
+    Provide encrypt or decrypt based on keys
+    :input bits: a 64-bits long 0, 1 list, keys: a list of 48-bits long 0, 1 list
+    :output a 64-bits long 0, 1 list
+    """
     IP = [57, 49, 41, 33, 25, 17, 9,  1,
           59, 51, 43, 35, 27, 19, 11, 3,
           61, 53, 45, 37, 29, 21, 13, 5,
@@ -179,6 +213,11 @@ def des(bits, keys):
     return selfReplacement(right + left, IP_1)
 
 def encrypt(bits):
+    """
+    Encrypt bits
+    if bits is shorter than 64n-bits, then add random bits to its end
+    And adds padding length as a 8-bits long list to its end
+    """
     pre_bits = IV
     cipher = []
     final = False
@@ -206,6 +245,9 @@ def encrypt(bits):
     return cipher
 
 def decrypt(bits):
+    """
+    Decrypt bits
+    """
     pre_bits = IV
     plain = []
     while bits:
@@ -216,6 +258,9 @@ def decrypt(bits):
     return plain
 
 def perror(error):
+    """
+    Print error message to stderr and exit
+    """
     print >> sys.stderr, error
     exit()
 
