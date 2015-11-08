@@ -37,3 +37,6 @@ def mod_exp(x, p, m):
         if bit == 1:
             result = (result * powers[i]) % m
     return result
+
+def Miller_Robin(n, k):
+    pass

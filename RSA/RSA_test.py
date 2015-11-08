@@ -27,3 +27,10 @@ class TestRSAAlgorithm(unittest.TestCase):
         self.assertEqual(rsa.mod_exp(2, 5, 10), 2)
         self.assertEqual(rsa.mod_exp(3, 5, 10), 3)
         self.assertEqual(rsa.mod_exp(2, 100, 3), 1)
+
+    def test_Miller_Robin(self):
+        self.assertTrue(rsa.Miller_Robin(2, 10))
+        self.assertTrue(rsa.Miller_Robin(11, 10))
+        self.assertTrue(rsa.Miller_Robin(12026655772210679470465581609002525329245773732132014742758935511187863487919026457076252932048619706498126046597130520643092209728783224795661331197604583, 50))
+        self.assertFalse(rsa.Miller_Robin(4, 10))
+        self.assertFalse(rsa.Miller_Robin(100, 10))
