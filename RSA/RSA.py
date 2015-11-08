@@ -63,3 +63,10 @@ def Miller_Robin(n, k):
         if test(a) == False:
             return False
     return True
+
+def mul_inverse(d, m):
+    if coPrime(d, m):
+        return extended_euclid(d, m)[1] % m
+    else:
+        raise ValueError
+
