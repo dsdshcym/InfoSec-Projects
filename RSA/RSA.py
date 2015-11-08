@@ -20,3 +20,6 @@ def extract_two_power(x):
         return 0, 0
     two_power = x & (-x)
     return int(log(two_power, 2)), x / two_power
+
+def mod_exp(x, p, m):
+    pass

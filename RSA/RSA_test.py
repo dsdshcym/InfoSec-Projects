@@ -22,3 +22,8 @@ class TestRSAAlgorithm(unittest.TestCase):
         self.assertEqual(rsa.extract_two_power(0), (0, 0))
         self.assertEqual(rsa.extract_two_power(2), (1, 1))
         self.assertEqual(rsa.extract_two_power(12), (2, 3))
+
+    def test_mod_exp(self):
+        self.assertEqual(rsa.mod_exp(2, 5, 10), 2)
+        self.assertEqual(rsa.mod_exp(3, 5, 10), 3)
+        self.assertEqual(rsa.mod_exp(2, 100, 3), 1)
