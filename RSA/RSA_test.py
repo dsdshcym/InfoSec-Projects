@@ -17,3 +17,8 @@ class TestRSAAlgorithm(unittest.TestCase):
         assert rsa.coPrime(3, 5)
         assert not rsa.coPrime(123, 6)
         assert not rsa.coPrime(2, 0)
+
+    def test_extract_two_power(self):
+        self.assertEqual(rsa.extract_two_power(0), (0, 0))
+        self.assertEqual(rsa.extract_two_power(2), (1, 1))
+        self.assertEqual(rsa.extract_two_power(12), (2, 3))
