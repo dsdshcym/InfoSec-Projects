@@ -9,3 +9,6 @@ def extended_euclid(x, y):
     else:
         g, b, a = extended_euclid(y % x, x)
         return g, a - (y // x) * b, b
+
+def coPrime(x, y):
+    return euclid(x, y) == 1
