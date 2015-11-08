@@ -1,4 +1,5 @@
 from math import log
+from random import randint
 
 import sys
 sys.path.append('..')
@@ -39,4 +40,26 @@ def mod_exp(x, p, m):
     return result
 
 def Miller_Robin(n, k):
-    pass
+    if n == 2:
+        return True
+
+    if n % 2 == 0:
+        return False
+
+    s, d = extract_two_power(n - 1)
+
+    def test(a):
+        x = mod_exp(a, d, n)
+        if x == 1 or x == n - 1:
+            return None
+        for i in range(1, s):
+            x = mod_exp(x, 2, n)
+            if x == n - 1:
+                return None
+        return False
+
+    for i in range(k):
+        a = randint(2, n - 1)
+        if test(a) == False:
+            return False
+    return True
