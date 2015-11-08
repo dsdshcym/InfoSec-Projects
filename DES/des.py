@@ -2,6 +2,10 @@
 from random import randint
 import argparse
 import sys
+
+sys.path.append('..')
+from public import *
+
 import getpass
 
 def leftShift(bits, step):
@@ -30,29 +34,6 @@ def xor(list_A, list_B):
     for i in range(len(list_A)):
         ans.append(list_A[i] ^ list_B[i])
     return ans
-
-def bits_to_int(bits):
-    """
-    Transform a 0, 1 list to a integer
-    """
-    return int(bits_to_str(bits), 2)
-
-def int_to_bits(x, n):
-    """
-    Transform a integer to a n-length 0, 1 list
-    Pads 0 if n > len(bin(x))
-    Raises ValueError if n < len(bin(x))
-    """
-    b = map(int, list(bin(x)[2:]))
-    if len(b) > n:
-        raise ValueError
-    return [0 for _ in xrange(n - len(b))] + b
-
-def bits_to_str(bits):
-    """
-    Transform a 0, 1 list to a string
-    """
-    return ''.join(map(str, bits))
 
 def generateKeys(key):
     """
