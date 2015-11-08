@@ -4,4 +4,8 @@ def euclid(x, y):
     return y
 
 def extended_euclid(x, y):
-    pass
+    if (x == 0):
+        return y, 0, 1
+    else:
+        g, b, a = extended_euclid(y % x, x)
+        return g, a - (y // x) * b, b
