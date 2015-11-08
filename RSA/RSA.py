@@ -1,3 +1,5 @@
+from math import log
+
 def euclid(x, y):
     while x != 0:
         x, y = y % x, x
@@ -12,3 +14,9 @@ def extended_euclid(x, y):
 
 def coPrime(x, y):
     return euclid(x, y) == 1
+
+def extract_two_power(x):
+    if x == 0:
+        return 0, 0
+    two_power = x & (-x)
+    return int(log(two_power, 2)), x / two_power
