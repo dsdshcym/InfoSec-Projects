@@ -1,5 +1,10 @@
 from math import log
 
+import sys
+sys.path.append('..')
+
+from public import *
+
 def euclid(x, y):
     while x != 0:
         x, y = y % x, x
@@ -22,4 +27,13 @@ def extract_two_power(x):
     return int(log(two_power, 2)), x / two_power
 
 def mod_exp(x, p, m):
-    pass
+    bits = int_to_bits(p)
+    max_power = len(bits)
+    powers = [x % m]
+    for i in xrange(2, max_power + 1):
+        powers.append((powers[i - 2] ** 2) % m)
+    result = 1
+    for i, bit in enumerate(bits[::-1]):
+        if bit == 1:
+            result = (result * powers[i]) % m
+    return result
