@@ -96,3 +96,9 @@ def generate_key(a, b, k):
 
     e = mul_inverse(d, m)
     return n, e, d
+
+def encrypt(plain, n, e):
+    return mod_exp(plain, e, n)
+
+def decrypt(cipher, n, d):
+    return mod_exp(cipher, d, n)
