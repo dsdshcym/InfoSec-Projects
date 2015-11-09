@@ -70,3 +70,29 @@ def mul_inverse(d, m):
     else:
         raise ValueError
 
+def find_a_prime(a, b, k):
+    x = randint(a, b)
+    for i in range(int(10 * log(x) + 3)):
+        if Miller_Robin(x, k):
+            return x
+        else:
+            x += 1
+    raise ValueError
+
+def generate_key(a, b, k):
+    try:
+        q = p = find_a_prime(a, b, k)
+        while q == p:
+            q = find_a_prime(a, b, k)
+    except:
+        raise ValueError
+
+    n = p * q
+    m = (p - 1) * (q - 1)
+
+    d = randint(1, m)
+    while not coPrime(d, m):
+        d = randint(1, m)
+
+    e = mul_inverse(d, m)
+    return n, e, d
