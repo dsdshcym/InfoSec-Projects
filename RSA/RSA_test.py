@@ -1,7 +1,11 @@
 import RSA as rsa
+from random import randint
 import unittest
 
 class TestRSAAlgorithm(unittest.TestCase):
+    def setUp(self):
+        self.n, self.e, self.d = rsa.generate_key(10 ** 100, 10 ** 101, 50)
+
     def test_euclid(self):
         assert rsa.euclid(1, 2) == 1
         assert rsa.euclid(4, 11) == 1
@@ -38,3 +42,9 @@ class TestRSAAlgorithm(unittest.TestCase):
     def test_mul_inverse(self):
         self.assertEqual(rsa.mul_inverse(11, 15), 11)
         self.assertEqual(rsa.mul_inverse(11, 16), 3)
+
+    def test_encrypt_decrypt(self):
+        for i in xrange(50):
+            plain = randint(1000, 10000)
+            cipher = rsa.encrypt(plain, self.n, self.e)
+            self.assertEqual(rsa.decrypt(cipher, self.n, self.d), plain)
