@@ -2,9 +2,10 @@ from math import log
 from random import randint
 
 import sys
+
 sys.path.append('..')
 
-from public import *
+from public.public import *
 
 def euclid(x, y):
     while x != 0:

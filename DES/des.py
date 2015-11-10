@@ -4,7 +4,8 @@ import argparse
 import sys
 
 sys.path.append('..')
-from public import *
+
+from public.public import *
 
 import getpass
 
