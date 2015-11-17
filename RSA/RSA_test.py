@@ -48,3 +48,6 @@ class TestRSAAlgorithm(unittest.TestCase):
             plain = randint(1000, 10000)
             cipher = rsa.encrypt(plain, self.n, self.e)
             self.assertEqual(rsa.decrypt(cipher, self.n, self.d), plain)
+
+suite = unittest.TestLoader().loadTestsFromTestCase(TestRSAAlgorithm)
+unittest.TextTestRunner(verbosity=2).run(suite)
