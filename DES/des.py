@@ -6,6 +6,7 @@ import sys
 sys.path.append('..')
 
 from public.public import *
+from RSA import RSA
 
 import getpass
 
@@ -250,6 +251,8 @@ def main():
     parser = argparse.ArgumentParser(
         description = 'DES Encrypt or Decrypt at the command line')
     parser.add_argument(
+        '-u', '--use_rsa', action = 'store_true', default = False)
+    parser.add_argument(
         '-d', '--decrypt', action = 'store_true', default = False)
     parser.add_argument(
         'file', type = argparse.FileType('r'),
@@ -268,6 +271,7 @@ def main():
         help = 'The file where the encrypt/decrypt results should be written')
     args = parser.parse_args()
     is_decrypt = args.decrypt
+    use_rsa = args.use_rsa
 
     global encrypt_times
     encrypt_times = args.encrypt_round
@@ -294,12 +298,19 @@ def main():
     key = getpass.getpass('Please Enter the Key: ')
     if set(key) != set(['0', '1']):
         perror("The key must be a binary")
-    if len(key) != 64:
-        perror("The key must be a 64 bits binary")
+    # if len(key) != 64:
+    #     perror("The key must be a 64 bits binary")
 
     bits = map(int, list(bits))
     key = map(int, list(key))
     IV = map(int, list(IV))
+
+    if use_rsa:
+        n = int(getpass.getpass('Please Enter the N used for rsa encrypt/decrypt:'))
+        d = int(getpass.getpass('Please Enter the D used for rsa encrypt/decrypt:'))
+
+    if is_decrypt:
+        key = int_to_bits(RSA.decrypt(bits_to_int(key), n, d), 64)
 
     global keys
     keys = generateKeys(key)
@@ -310,6 +321,7 @@ def main():
     else:
         args.output.write(bits_to_str(des(IV, keys)) + '\n')
         args.output.write(bits_to_str(encrypt(bits)) + '\n')
+        args.output.write(bits_to_str(int_to_bits(RSA.encrypt(bits_to_int(key), n, d))))
 
 if __name__ == '__main__':
     main()
